@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Window size="600,280" mininfo="600,280" caption="0,0,0,200" roundcorner="1,1,1,1">
+
+  <!-- 字体定义 -->
+  <Font id = "0" name="微软雅黑" size="16" bold="false" italic="false" />
+  <Font id = "1" name="微软雅黑" size="14" bold="false" italic="false" />
+
+  <VerticalLayout bkcolor="#FF414751">
+    <!-- 标题区域 -->
+    <HorizontalLayout height="30" bkcolor="#FF414751">
+      <HorizontalLayout>
+        <!--<Container width="22" height="22" bkimage="file='icon.png' source='0,0,16,16' dest='5,4,21,20' " />-->
+        <Text text="软件安装器" pos="5, 5, 80, 24" float="true" textcolor="#FFFFFFFF" font="1" />
+      </HorizontalLayout>
+      <HorizontalLayout width="48" inset="0,1,0,0">
+        <Button name="aboutbtn" tooltip="关于" float="true" pos="0,5,19,24" width="21"
+                normalimage=" file='btn_menu.png' source='0,0,19,19'"
+                hotimage=" file='btn_menu.png' source='19,0,38,19'"
+                pushedimage=" file='btn_menu.png' source='38,0,57,19'"/>
+        <Button name="closebtn" tooltip="关闭" float="true" pos="21,5,19,24" width="21"
+                normalimage=" file='btn_close.png' source='0,0,19,19'"
+                hotimage=" file='btn_close.png' source='19,0,38,19'"
+                pushedimage=" file='btn_close.png' source='38,0,57,19'"/>
+      </HorizontalLayout>
+    </HorizontalLayout>
+    
+    <!-- 客户区 -->
+    <HorizontalLayout height="180" bkcolor="#FF414751">
+      <HorizontalLayout width="200">
+        <Option name="image" pos="40,10,180,150" float="true" align="bottom" foreimage="file='vs_2010.png' dest='0,0,180,150'"/>
+      </HorizontalLayout>
+      <HorizontalLayout>
+        <Text name="current" pos="0,20,400,55" float="true" text="" textcolor="#FFFFFFFF" font="0"/>
+        <Text name="discription" pos="0,65,400,90" float="true" text="" textcolor="#FFFFFFFF" font="0"/>
+        <Text name="progress" pos="0,110,400,135" float="true" text="安装进度：0/0" textcolor="#FFFFFFFF" font="0"/>
+      </HorizontalLayout>
+    </HorizontalLayout>
+
+    <!-- 进度条 -->
+    <HorizontalLayout bkcolor="#FFF6FAFD">
+      <Progress name="down_progress_back" pos="35,32,565,35" float="true" foreimage="file='progress_sync_bg.png' source='0,0,116,3'" min="0" max="100" value="100" maxheight="3" maxwidth="550"/>
+      <Progress name="down_progress_front" pos="35,32,565,35" float="true" foreimage="file='progress_sync_bg.png' source='116,0,232,3'" min="0" max="100" value="10" maxheight="3" maxwidth="550"/>
+    </HorizontalLayout>
+  </VerticalLayout>
+</Window>
