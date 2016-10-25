@@ -16,9 +16,6 @@
 #include <memory.h>
 #include <tchar.h>
 
-// 标准库
-#include <thread>
-
 // TODO:  在此处引用程序需要的其他头文件
 #include "IniFile.h"
 #include "UIlib.h"
@@ -26,3 +23,5 @@
 
 using namespace DuiLib;
 using namespace std;
+
+#define WM_EXIT_APP (WM_USER + 0x12345)

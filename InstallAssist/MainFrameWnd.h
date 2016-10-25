@@ -14,6 +14,8 @@ public:
 	void SetProgressText(LPCTSTR pStrText);
 	void SetProgressValue(int nValue);
 
+	static DWORD WINAPI WorkerThread(LPVOID lpParameter);
+
 protected:
 	virtual CDuiString	GetSkinFolder();
 	virtual CDuiString	GetSkinFile();
@@ -22,6 +24,7 @@ protected:
 	virtual void		Notify(TNotifyUI& msg);
 	virtual void		InitWindow();
 
+	virtual LRESULT		MessageHandler(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, bool& /*bHandled*/);
 	virtual LRESULT		OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 private:
@@ -33,5 +36,7 @@ private:
 	CTextUI*			m_pDescription;
 	CTextUI*			m_pProgress;
 	CProgressUI*		m_pProgressUI;
+
+	HANDLE				m_hWorkerThread;
 };
 

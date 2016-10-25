@@ -13,21 +13,19 @@ public:
 
 	void End();
 
-	static void InstallThread(
-		CInstallManager* pObjInstallManager
-	);
+	static DWORD WINAPI InstallThread(LPVOID lpParameter);
 
 	static HANDLE ExecuteFile(
 		LPCTSTR lpszExecuteFile, 
-		LPCTSTR lpszCmdLineParamter = nullptr, 
+		LPCTSTR lpszCmdLineParamter = NULL, 
 		BOOL bWaitFinish = FALSE, 
-		DWORD *pdwRetExitCode = nullptr,
+		DWORD *pdwRetExitCode = NULL,
 		BOOL bShow = TRUE
 	);
 
 private:
 	CMainFrameWnd*	m_pMainFrameWnd;
-	thread*			m_pInstallThread;
+	HANDLE			m_hInstallThread;
 	CIniFile*		m_pIniFile;
 };
 

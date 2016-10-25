@@ -16,7 +16,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// 设置关联实例
 	CPaintManagerUI::SetInstance(hInstance);
 	// 设置皮肤路径
-	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath() + _T("skin"));
+	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
+	CPaintManagerUI::SetResourceZip(_T("Skin.zip"));
 
 	// 初始化 COM 库
 	HRESULT hr = CoInitialize(NULL);
@@ -33,7 +34,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	CPaintManagerUI::MessageLoop();
 
-	if (nullptr != pFrame)
+	if (NULL != pFrame)
 	{
 		delete pFrame;
 	}

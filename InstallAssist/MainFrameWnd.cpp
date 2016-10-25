@@ -4,34 +4,41 @@
 
 
 CMainFrameWnd::CMainFrameWnd()
-	: m_pWndShadow(nullptr)
-	, m_pImage(nullptr)
-	, m_pCurrentInstall(nullptr)
-	, m_pDescription(nullptr)
-	, m_pProgress(nullptr)
-	, m_pInstallManager(nullptr)
-	, m_pProgressUI(nullptr)
+	: m_pWndShadow(NULL)
+	, m_pImage(NULL)
+	, m_pCurrentInstall(NULL)
+	, m_pDescription(NULL)
+	, m_pProgress(NULL)
+	, m_pInstallManager(NULL)
+	, m_pProgressUI(NULL)
+	, m_hWorkerThread(NULL)
 {
 }
 
 CMainFrameWnd::~CMainFrameWnd()
 {
-	if (nullptr != m_pWndShadow)
+	if (NULL != m_pWndShadow)
 	{
 		delete m_pWndShadow;
-		m_pWndShadow = nullptr;
+		m_pWndShadow = NULL;
 	}
 
-	if (nullptr != m_pInstallManager)
+	if (NULL != m_pInstallManager)
 	{
 		delete m_pInstallManager;
-		m_pInstallManager = nullptr;
+		m_pInstallManager = NULL;
+	}
+	
+	if (NULL != m_hWorkerThread)
+	{
+		CloseHandle(m_hWorkerThread);
+		m_hWorkerThread = NULL;
 	}
 }
 
 CDuiString CMainFrameWnd::GetSkinFolder()
 {
-	return _T("Skin");
+	return m_PaintManager.GetInstancePath();
 }
 
 CDuiString CMainFrameWnd::GetSkinFile()
@@ -56,7 +63,7 @@ void CMainFrameWnd::Notify(TNotifyUI& msg)
 		}
 		if (msg.pSender->GetName() == _T("closebtn"))
 		{
-			m_pInstallManager->End();
+			Close();
 			PostQuitMessage(0);
 		}
 	}
@@ -64,14 +71,32 @@ void CMainFrameWnd::Notify(TNotifyUI& msg)
 
 void CMainFrameWnd::InitWindow()
 {
+	DWORD dwThread;
+
 	m_pImage = static_cast<COptionUI*>(m_PaintManager.FindControl(_T("image")));
 	m_pCurrentInstall = static_cast<CTextUI*>(m_PaintManager.FindControl(_T("current")));
 	m_pDescription = static_cast<CTextUI*>(m_PaintManager.FindControl(_T("discription")));
 	m_pProgress = static_cast<CTextUI*>(m_PaintManager.FindControl(_T("progress")));
 	m_pProgressUI = static_cast<CProgressUI*>(m_PaintManager.FindControl(_T("down_progress_front")));
 
-	m_pInstallManager = new CInstallManager(this);
-	m_pInstallManager->Begin();
+	m_hWorkerThread = CreateThread(NULL, 0, WorkerThread, this, 0, &dwThread);
+}
+
+LRESULT CMainFrameWnd::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, bool& /*bHandled*/)
+{
+	if (uMsg == WM_KEYDOWN)
+	{
+		switch (wParam)
+		{
+		case VK_RETURN:
+		case VK_ESCAPE:
+			return FALSE;
+		default:
+			break;
+		}
+	}
+
+	return FALSE;
 }
 
 LRESULT CMainFrameWnd::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -97,7 +122,7 @@ LRESULT CMainFrameWnd::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 
 void CMainFrameWnd::SetImage(LPCTSTR pStrImage)
 {
-	if (nullptr != m_pImage)
+	if (NULL != m_pImage)
 	{
 		m_pImage->SetForeImage(pStrImage);
 	}
@@ -105,7 +130,7 @@ void CMainFrameWnd::SetImage(LPCTSTR pStrImage)
 
 void CMainFrameWnd::SetCurrentInstallText(LPCTSTR pStrText)
 {
-	if (nullptr != m_pCurrentInstall)
+	if (NULL != m_pCurrentInstall)
 	{
 		m_pCurrentInstall->SetText(pStrText);
 	}
@@ -113,7 +138,7 @@ void CMainFrameWnd::SetCurrentInstallText(LPCTSTR pStrText)
 
 void CMainFrameWnd::SetDescriptionText(LPCTSTR pStrText)
 {
-	if (nullptr != m_pDescription)
+	if (NULL != m_pDescription)
 	{
 		m_pDescription->SetText(pStrText);
 	}
@@ -121,7 +146,7 @@ void CMainFrameWnd::SetDescriptionText(LPCTSTR pStrText)
 
 void CMainFrameWnd::SetProgressText(LPCTSTR pStrText)
 {
-	if (nullptr != m_pProgress)
+	if (NULL != m_pProgress)
 	{
 		m_pProgress->SetText(pStrText);
 	}
@@ -130,4 +155,24 @@ void CMainFrameWnd::SetProgressText(LPCTSTR pStrText)
 void CMainFrameWnd::SetProgressValue(int nValue)
 {
 	m_pProgressUI->SetValue(nValue);
+}
+
+DWORD WINAPI CMainFrameWnd::WorkerThread(LPVOID lpParameter)
+{
+	CMainFrameWnd* pMainFrameWnd = reinterpret_cast<CMainFrameWnd*>(lpParameter);
+
+	pMainFrameWnd->m_pInstallManager = new CInstallManager(pMainFrameWnd);
+
+	pMainFrameWnd->m_pInstallManager->Begin();
+	pMainFrameWnd->m_pInstallManager->End();
+
+	if (NULL != pMainFrameWnd->m_pInstallManager)
+	{
+		delete pMainFrameWnd->m_pInstallManager;
+		pMainFrameWnd->m_pInstallManager = NULL;
+	}
+
+	pMainFrameWnd->Close();
+	PostQuitMessage(0);
+	exit(0);
 }
