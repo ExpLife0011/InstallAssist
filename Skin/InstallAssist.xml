@@ -10,7 +10,7 @@
     <!-- 标题区域 -->
     <HorizontalLayout height="30" bkcolor="#FF414751">
       <HorizontalLayout>
-        <!--<Container width="22" height="22" bkimage="file='icon.png' source='0,0,16,16' dest='5,4,21,20' " />-->
+        <!-- <Container width="22" height="22" bkimage="file='zebra.png' source='0,0,16,16' dest='5,4,21,20' " /> -->
         <Text text="软件安装器" pos="5, 5, 80, 24" float="true" textcolor="#FFFFFFFF" font="1" />
       </HorizontalLayout>
       <HorizontalLayout width="48" inset="0,1,0,0">
